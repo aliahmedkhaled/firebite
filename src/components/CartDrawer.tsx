@@ -1,28 +1,64 @@
-import { useEffect, useRef } from 'react'
-import { Minus, Plus, ShoppingBag, Trash2, X } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { Check, Minus, Plus, ShoppingBag, Trash2, X } from 'lucide-react'
 import { useCart } from '../cart/useCart'
+import { checkoutStrings } from '../i18n/checkoutStrings'
 import { useLang } from '../i18n/useLang'
+import CheckoutForm from './CheckoutForm'
+
+type View = 'cart' | 'checkout' | 'done'
+
+interface Receipt {
+  number: string
+  count: number
+  total: number
+}
 
 export default function CartDrawer() {
   const { lang, t } = useLang()
   const { items, count, total, isOpen, open, close, setQty, remove, clear } = useCart()
+  const c = checkoutStrings[lang]
+
+  const [view, setView] = useState<View>('cart')
+  const [receipt, setReceipt] = useState<Receipt | null>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
+  const titleRef = useRef<HTMLHeadingElement>(null)
+
   const nf = new Intl.NumberFormat(lang === 'ar' ? 'ar-EG-u-nu-latn' : 'en-US', {
     maximumFractionDigits: 0,
   })
 
+  function handleClose() {
+    close()
+    window.setTimeout(() => setView('cart'), 300)
+  }
+
+  function handlePlaced() {
+    setReceipt({
+      number: `FB-${Math.floor(1000 + Math.random() * 9000)}`,
+      count,
+      total,
+    })
+    clear()
+    setView('done')
+  }
+
   useEffect(() => {
-    if (isOpen) closeRef.current?.focus()
-  }, [isOpen])
+    if (!isOpen) return
+    if (view === 'cart') closeRef.current?.focus()
+    else titleRef.current?.focus()
+  }, [isOpen, view])
 
   useEffect(() => {
     if (!isOpen) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') close()
+      if (e.key === 'Escape') handleClose()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [isOpen, close])
+  })
+
+  const title =
+    view === 'cart' ? t.cartUi.title : view === 'checkout' ? c.title : c.doneTitle
 
   return (
     <>
@@ -48,7 +84,7 @@ export default function CartDrawer() {
       {/* الخلفية */}
       <div
         aria-hidden="true"
-        onClick={close}
+        onClick={handleClose}
         className={`fixed inset-0 z-50 bg-charcoal/50 transition-opacity duration-300 ${
           isOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
         }`}
@@ -64,13 +100,18 @@ export default function CartDrawer() {
         }`}
       >
         <div className="flex items-center justify-between border-b border-charcoal/10 px-5 py-4">
-          <h2 id="cart-title" className="font-display text-2xl font-black">
-            {t.cartUi.title}
+          <h2
+            id="cart-title"
+            ref={titleRef}
+            tabIndex={-1}
+            className="font-display text-2xl font-black outline-none"
+          >
+            {title}
           </h2>
           <button
             ref={closeRef}
             type="button"
-            onClick={close}
+            onClick={handleClose}
             aria-label={t.cartUi.close}
             className="grid size-11 place-items-center rounded-full transition-colors hover:bg-sand"
           >
@@ -78,7 +119,32 @@ export default function CartDrawer() {
           </button>
         </div>
 
-        {items.length === 0 ? (
+        {view === 'done' && receipt ? (
+          <div className="grid flex-1 place-items-center px-6 text-center">
+            <div>
+              <span className="mx-auto grid size-16 place-items-center rounded-full bg-ember text-white">
+                <Check className="size-9" aria-hidden="true" />
+              </span>
+              <p className="mt-5 text-charcoal/70">{c.doneBody}</p>
+              <p className="mt-6 text-sm text-charcoal/60">{c.orderNo}</p>
+              <p className="font-display text-3xl font-black" dir="ltr">
+                {receipt.number}
+              </p>
+              <p className="mt-2 font-semibold">
+                {receipt.count} {c.items} · {nf.format(receipt.total)} {t.currency}
+              </p>
+              <button
+                type="button"
+                onClick={handleClose}
+                className="mt-8 min-h-12 rounded-full bg-ember px-8 font-bold text-white transition-colors hover:bg-ember-dark"
+              >
+                {c.newOrder}
+              </button>
+            </div>
+          </div>
+        ) : view === 'checkout' ? (
+          <CheckoutForm onBack={() => setView('cart')} onPlaced={handlePlaced} />
+        ) : items.length === 0 ? (
           <div className="grid flex-1 place-items-center px-6 text-center">
             <div>
               <ShoppingBag className="mx-auto size-12 text-charcoal/30" aria-hidden="true" />
@@ -152,8 +218,15 @@ export default function CartDrawer() {
               <p className="mt-2 text-sm text-charcoal/60">{t.cartUi.codNote}</p>
               <button
                 type="button"
+                onClick={() => setView('checkout')}
+                className="mt-3 min-h-14 w-full rounded-full bg-ember text-lg font-bold text-white transition-colors hover:bg-ember-dark"
+              >
+                {c.checkout}
+              </button>
+              <button
+                type="button"
                 onClick={clear}
-                className="mt-3 min-h-11 text-sm font-semibold text-charcoal/60 underline-offset-4 hover:text-brick hover:underline"
+                className="mt-2 min-h-11 w-full text-sm font-semibold text-charcoal/60 underline-offset-4 hover:text-brick hover:underline"
               >
                 {t.cartUi.clear}
               </button>
