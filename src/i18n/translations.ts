@@ -5,6 +5,7 @@ const en = {
   orderNow: 'Order now',
   switchTo: 'العربية',
   cart: 'Cart',
+  currency: 'EGP',
   nav: {
     offers: 'Offers',
     menu: 'Menu',
@@ -18,6 +19,12 @@ const en = {
     secondaryCta: 'See today’s offers',
     imageLabel: 'Hero dish photo',
   },
+  offers: {
+    title: 'Today’s offers',
+    off: 'off',
+    addToOrder: 'Add to order',
+    imageLabel: 'Offer photo',
+  },
 }
 
 export type Dict = typeof en
@@ -27,6 +34,7 @@ const ar: Dict = {
   orderNow: 'اطلب الآن',
   switchTo: 'English',
   cart: 'السلة',
+  currency: 'جنيه',
   nav: {
     offers: 'العروض',
     menu: 'المنيو',
@@ -39,6 +47,12 @@ const ar: Dict = {
     primaryCta: 'اطلب الآن',
     secondaryCta: 'شوف عروض النهارده',
     imageLabel: 'صورة الطبق الرئيسي',
+  },
+  offers: {
+    title: 'عروض النهارده',
+    off: 'خصم',
+    addToOrder: 'أضف للطلب',
+    imageLabel: 'صورة العرض',
   },
 }
 

@@ -1,7 +1,8 @@
 import Header from './components/Header'
 import Hero from './components/Hero'
+import Offers from './components/Offers'
 
-const placeholders = ['offers', 'menu', 'story']
+const placeholders = ['menu', 'story']
 
 export default function App() {
   return (
@@ -9,6 +10,7 @@ export default function App() {
       <Header />
       <main>
         <Hero />
+        <Offers />
         {placeholders.map((id) => (
           <section
             key={id}
