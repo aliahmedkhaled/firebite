@@ -122,7 +122,7 @@ export const menuItems: MenuItem[] = [
       ar: 'ليمون فريش ونعناع وتلج.',
     },
     price: 40,
-    image: 'menu-6',
+    image: 'menu-9',
   },
   {
     id: 'choc-shake',
@@ -133,7 +133,29 @@ export const menuItems: MenuItem[] = [
       ar: 'ميلك شيك شوكولاتة تقيل بكريمة على الوش.',
     },
     price: 70,
-    image: 'menu-7',
+    image: 'menu-10',
+  },
+  {
+    id: 'peach-tea',
+    category: 'drinks',
+    name: { en: 'Iced Peach Tea', ar: 'آيس تي خوخ' },
+    description: {
+      en: 'Chilled black tea with peach and ice.',
+      ar: 'شاي مثلج بنكهة الخوخ وتلج.',
+    },
+    price: 45,
+    image: 'menu-11',
+  },
+  {
+    id: 'orange-juice',
+    category: 'drinks',
+    name: { en: 'Fresh Orange Juice', ar: 'عصير برتقال فريش' },
+    description: {
+      en: 'Freshly squeezed orange juice over ice.',
+      ar: 'عصير برتقال متعصّر عالطازة على تلج.',
+    },
+    price: 50,
+    image: 'menu-12',
   },
   {
     id: 'molten-brownie',

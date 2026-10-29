@@ -39,4 +39,34 @@ export const offers: Offer[] = [
     price: 399,
     oldPrice: 520,
   },
+  {
+    id: 'crispy-duo',
+    title: { en: 'Crispy Duo', ar: 'ديو كرسبي' },
+    description: {
+      en: 'Two crispy chicken sandwiches and two fries.',
+      ar: 'ساندويتشين فراخ كرسبي مع بطاطسين.',
+    },
+    price: 199,
+    oldPrice: 270,
+  },
+  {
+    id: 'tender-box',
+    title: { en: 'Tender Box', ar: 'بوكس التندرز' },
+    description: {
+      en: 'Ten golden tenders, fries and two dips.',
+      ar: 'عشر قطع تندرز دهبي مع بطاطس وصوصين.',
+    },
+    price: 229,
+    oldPrice: 300,
+  },
+  {
+    id: 'burger-shake',
+    title: { en: 'Burger & Shake', ar: 'برجر وميلك شيك' },
+    description: {
+      en: 'Smash burger, fries and a chocolate milkshake.',
+      ar: 'برجر سماش مع بطاطس وميلك شيك شوكولاتة.',
+    },
+    price: 189,
+    oldPrice: 265,
+  },
 ]

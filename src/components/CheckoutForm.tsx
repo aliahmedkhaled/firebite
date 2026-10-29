@@ -1,11 +1,14 @@
 import { useRef, useState, type FormEvent } from 'react'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, MessageCircle } from 'lucide-react'
+import { useCart } from '../cart/useCart'
 import { checkoutStrings } from '../i18n/checkoutStrings'
 import { useLang } from '../i18n/useLang'
+import { calcTotals } from '../lib/pricing'
+import { isWhatsAppConfigured, type OrderDetails } from '../lib/whatsapp'
 
 interface Props {
   onBack: () => void
-  onPlaced: () => void
+  onSubmit: (details: OrderDetails) => void
 }
 
 function toLatinDigits(s: string) {
@@ -19,22 +22,29 @@ const PHONE_RE = /^01[0125]\d{8}$/
 const field =
   'mt-1 w-full rounded-2xl border border-charcoal/20 bg-white px-4 py-3 text-base outline-none transition-colors focus:border-ember aria-[invalid=true]:border-brick'
 
-export default function CheckoutForm({ onBack, onPlaced }: Props) {
+export default function CheckoutForm({ onBack, onSubmit }: Props) {
   const { lang, t } = useLang()
+  const { total } = useCart()
   const c = checkoutStrings[lang]
+  const totals = calcTotals(total)
+  const nf = new Intl.NumberFormat(lang === 'ar' ? 'ar-EG-u-nu-latn' : 'en-US', {
+    maximumFractionDigits: 0,
+  })
 
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [address, setAddress] = useState('')
   const [notes, setNotes] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [configErr, setConfigErr] = useState(false)
 
   const nameRef = useRef<HTMLInputElement>(null)
   const phoneRef = useRef<HTMLInputElement>(null)
   const addressRef = useRef<HTMLTextAreaElement>(null)
 
+  const digits = toLatinDigits(phone).replace(/[\s-]/g, '')
   const nameOk = name.trim().length >= 2
-  const phoneOk = PHONE_RE.test(toLatinDigits(phone).replace(/[\s-]/g, ''))
+  const phoneOk = PHONE_RE.test(digits)
   const addressOk = address.trim().length >= 8
 
   function handleSubmit(e: FormEvent) {
@@ -43,7 +53,18 @@ export default function CheckoutForm({ onBack, onPlaced }: Props) {
     if (!nameOk) return nameRef.current?.focus()
     if (!phoneOk) return phoneRef.current?.focus()
     if (!addressOk) return addressRef.current?.focus()
-    onPlaced()
+
+    if (!isWhatsAppConfigured()) {
+      setConfigErr(true)
+      return
+    }
+    setConfigErr(false)
+    onSubmit({
+      name: name.trim(),
+      phone: digits,
+      address: address.trim(),
+      notes: notes.trim(),
+    })
   }
 
   const showName = submitted && !nameOk
@@ -62,6 +83,7 @@ export default function CheckoutForm({ onBack, onPlaced }: Props) {
             ref={nameRef}
             value={name}
             onChange={(e) => setName(e.target.value)}
+            maxLength={60}
             autoComplete="name"
             aria-invalid={showName}
             aria-describedby={showName ? 'co-name-err' : undefined}
@@ -83,6 +105,7 @@ export default function CheckoutForm({ onBack, onPlaced }: Props) {
             ref={phoneRef}
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
+            maxLength={20}
             type="tel"
             inputMode="tel"
             dir="ltr"
@@ -96,7 +119,7 @@ export default function CheckoutForm({ onBack, onPlaced }: Props) {
               {c.phoneErr}
             </p>
           ) : (
-            <p id="co-phone-hint" className="mt-1 text-sm text-charcoal/60">
+            <p id="co-phone-hint" className="mt-1 text-sm text-charcoal/70">
               {c.phoneHint}
             </p>
           )}
@@ -111,6 +134,7 @@ export default function CheckoutForm({ onBack, onPlaced }: Props) {
             ref={addressRef}
             value={address}
             onChange={(e) => setAddress(e.target.value)}
+            maxLength={200}
             rows={3}
             autoComplete="street-address"
             aria-invalid={showAddress}
@@ -132,6 +156,7 @@ export default function CheckoutForm({ onBack, onPlaced }: Props) {
             id="co-notes"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
+            maxLength={300}
             rows={2}
             placeholder={c.notesHint}
             className={field}
@@ -147,11 +172,25 @@ export default function CheckoutForm({ onBack, onPlaced }: Props) {
       </div>
 
       <div className="border-t border-charcoal/10 px-5 py-4">
+        <div className="mb-3 flex items-center justify-between text-lg font-black">
+          <span>{t.cartUi.total}</span>
+          <span className="text-ember">
+            {nf.format(totals.total)} {t.currency}
+          </span>
+        </div>
+
+        {configErr && (
+          <p role="alert" className="mb-2 text-sm font-semibold text-brick">
+            {c.notConfigured}
+          </p>
+        )}
+
         <button
           type="submit"
-          className="min-h-14 w-full rounded-full bg-ember text-lg font-bold text-white transition-colors hover:bg-ember-dark"
+          className="flex min-h-14 w-full items-center justify-center gap-2 rounded-full bg-ember text-lg font-bold text-white transition-colors hover:bg-ember-dark"
         >
-          {c.placeOrder}
+          <MessageCircle className="size-5" aria-hidden="true" />
+          {c.sendWhatsApp}
         </button>
         <button
           type="button"
@@ -161,8 +200,7 @@ export default function CheckoutForm({ onBack, onPlaced }: Props) {
           <ArrowLeft className="size-4 rtl:rotate-180" aria-hidden="true" />
           {c.back}
         </button>
-        <p className="mt-2 text-center text-xs text-charcoal/60">{c.protoNote}</p>
-        <span className="sr-only">{t.cartUi.total}</span>
+        <p className="mt-2 text-center text-xs text-charcoal/70">{c.protoNote}</p>
       </div>
     </form>
   )

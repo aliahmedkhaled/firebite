@@ -11,17 +11,23 @@ interface CheckoutStrings {
   notesHint: string
   payment: string
   cod: string
-  placeOrder: string
+  sendWhatsApp: string
   back: string
   nameErr: string
   phoneErr: string
   addressErr: string
+  notConfigured: string
   doneTitle: string
   doneBody: string
-  orderNo: string
-  items: string
+  doneHint: string
+  openAgain: string
   newOrder: string
   protoNote: string
+  subtotal: string
+  delivery: string
+  free: string
+  minOrder: (amount: string) => string
+  freeHint: (amount: string) => string
 }
 
 export const checkoutStrings: Record<Lang, CheckoutStrings> = {
@@ -36,17 +42,23 @@ export const checkoutStrings: Record<Lang, CheckoutStrings> = {
     notesHint: 'No onions, ring the bell twice…',
     payment: 'Payment',
     cod: 'Cash on delivery',
-    placeOrder: 'Place order',
+    sendWhatsApp: 'Send order on WhatsApp',
     back: 'Back to cart',
     nameErr: 'Please enter your name (at least 2 letters).',
     phoneErr: 'Enter a valid Egyptian mobile number (11 digits, starts with 010, 011, 012 or 015).',
     addressErr: 'Please enter a more complete address.',
-    doneTitle: 'Order received',
-    doneBody: 'This is a demo, so nothing was actually sent and no food is on the way.',
-    orderNo: 'Order number',
-    items: 'items',
-    newOrder: 'Back to menu',
-    protoNote: 'Prototype: no data is sent or stored.',
+    notConfigured: 'The WhatsApp number is not set yet. Add it in src/config/restaurant.ts.',
+    doneTitle: 'One last step',
+    doneBody: 'Your order is ready in WhatsApp',
+    doneHint: 'Press send in WhatsApp to place it. Nothing is sent until you do.',
+    openAgain: 'Open WhatsApp again',
+    newOrder: 'Start a new order',
+    protoNote: 'Demo: the order opens in WhatsApp as a message. There is no server.',
+    subtotal: 'Subtotal',
+    delivery: 'Delivery',
+    free: 'Free',
+    minOrder: (a) => `Minimum order is ${a}`,
+    freeHint: (a) => `Add ${a} more for free delivery`,
   },
   ar: {
     checkout: 'إتمام الطلب',
@@ -59,16 +71,22 @@ export const checkoutStrings: Record<Lang, CheckoutStrings> = {
     notesHint: 'من غير بصل، رن الجرس مرتين…',
     payment: 'الدفع',
     cod: 'الدفع عند الاستلام',
-    placeOrder: 'تأكيد الطلب',
+    sendWhatsApp: 'ابعت الطلب على واتساب',
     back: 'رجوع للسلة',
     nameErr: 'اكتب اسمك (حرفين على الأقل).',
     phoneErr: 'اكتب رقم موبايل مصري صحيح (11 رقم بيبدأ بـ 010 أو 011 أو 012 أو 015).',
     addressErr: 'اكتب عنوان أكمل من كده.',
-    doneTitle: 'وصلنا طلبك',
-    doneBody: 'ده مشروع تجريبي، فمفيش حاجة اتبعتت فعلًا ومفيش أكل جاي في الطريق.',
-    orderNo: 'رقم الطلب',
-    items: 'صنف',
-    newOrder: 'رجوع للمنيو',
-    protoNote: 'نموذج تجريبي: مفيش بيانات بتتبعت أو بتتخزن.',
+    notConfigured: 'رقم الواتساب لسه مش متحدد. ضيفه في src/config/restaurant.ts.',
+    doneTitle: 'فاضل خطوة أخيرة',
+    doneBody: 'طلبك جاهز في واتساب',
+    doneHint: 'اضغط إرسال في واتساب عشان الطلب يتبعت. مفيش حاجة بتتبعت قبل كده.',
+    openAgain: 'افتح واتساب تاني',
+    newOrder: 'ابدأ طلب جديد',
+    protoNote: 'نسخة تجريبية: الطلب بيتفتح في واتساب كرسالة، ومفيش سيرفر.',
+    subtotal: 'المجموع',
+    delivery: 'التوصيل',
+    free: 'مجاني',
+    minOrder: (a) => `الحد الأدنى للطلب ${a}`,
+    freeHint: (a) => `ضيف ${a} كمان والتوصيل يبقى مجاني`,
   },
 }

@@ -1,45 +1,46 @@
 import { useEffect, useRef, useState } from 'react'
-import { Check, Minus, Plus, ShoppingBag, Trash2, X } from 'lucide-react'
+import { MessageCircle, Minus, Plus, ShoppingBag, Trash2, X } from 'lucide-react'
 import { useCart } from '../cart/useCart'
+import { restaurant } from '../config/restaurant'
 import { checkoutStrings } from '../i18n/checkoutStrings'
 import { useLang } from '../i18n/useLang'
+import { calcTotals } from '../lib/pricing'
+import { buildWhatsAppUrl, type OrderDetails } from '../lib/whatsapp'
 import CheckoutForm from './CheckoutForm'
 
 type View = 'cart' | 'checkout' | 'done'
-
-interface Receipt {
-  number: string
-  count: number
-  total: number
-}
 
 export default function CartDrawer() {
   const { lang, t } = useLang()
   const { items, count, total, isOpen, open, close, setQty, remove, clear } = useCart()
   const c = checkoutStrings[lang]
+  const totals = calcTotals(total)
 
   const [view, setView] = useState<View>('cart')
-  const [receipt, setReceipt] = useState<Receipt | null>(null)
+  const [waUrl, setWaUrl] = useState('')
   const closeRef = useRef<HTMLButtonElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
 
   const nf = new Intl.NumberFormat(lang === 'ar' ? 'ar-EG-u-nu-latn' : 'en-US', {
     maximumFractionDigits: 0,
   })
+  const money = (n: number) => `${nf.format(n)} ${t.currency}`
 
   function handleClose() {
     close()
     window.setTimeout(() => setView('cart'), 300)
   }
 
-  function handlePlaced() {
-    setReceipt({
-      number: `FB-${Math.floor(1000 + Math.random() * 9000)}`,
-      count,
-      total,
-    })
-    clear()
+  function handleSubmit(details: OrderDetails) {
+    const url = buildWhatsAppUrl(items, details)
+    setWaUrl(url)
+    window.open(url, '_blank', 'noopener,noreferrer')
     setView('done')
+  }
+
+  function handleNewOrder() {
+    clear()
+    handleClose()
   }
 
   useEffect(() => {
@@ -57,8 +58,7 @@ export default function CartDrawer() {
     return () => window.removeEventListener('keydown', onKey)
   })
 
-  const title =
-    view === 'cart' ? t.cartUi.title : view === 'checkout' ? c.title : c.doneTitle
+  const title = view === 'cart' ? t.cartUi.title : view === 'checkout' ? c.title : c.doneTitle
 
   return (
     <>
@@ -74,9 +74,7 @@ export default function CartDrawer() {
               <ShoppingBag className="size-5" aria-hidden="true" />
               {t.cartUi.viewOrder} ({count})
             </span>
-            <span>
-              {nf.format(total)} {t.currency}
-            </span>
+            <span>{money(total)}</span>
           </button>
         </div>
       )}
@@ -119,37 +117,39 @@ export default function CartDrawer() {
           </button>
         </div>
 
-        {view === 'done' && receipt ? (
+        {view === 'done' ? (
           <div className="grid flex-1 place-items-center px-6 text-center">
             <div>
               <span className="mx-auto grid size-16 place-items-center rounded-full bg-ember text-white">
-                <Check className="size-9" aria-hidden="true" />
+                <MessageCircle className="size-8" aria-hidden="true" />
               </span>
-              <p className="mt-5 text-charcoal/70">{c.doneBody}</p>
-              <p className="mt-6 text-sm text-charcoal/60">{c.orderNo}</p>
-              <p className="font-display text-3xl font-black" dir="ltr">
-                {receipt.number}
-              </p>
-              <p className="mt-2 font-semibold">
-                {receipt.count} {c.items} · {nf.format(receipt.total)} {t.currency}
-              </p>
+              <p className="mt-5 text-xl font-bold">{c.doneBody}</p>
+              <p className="mt-2 text-charcoal/70">{c.doneHint}</p>
+              <a
+                href={waUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 inline-flex min-h-12 items-center rounded-full bg-ember px-8 font-bold text-white transition-colors hover:bg-ember-dark"
+              >
+                {c.openAgain}
+              </a>
               <button
                 type="button"
-                onClick={handleClose}
-                className="mt-8 min-h-12 rounded-full bg-ember px-8 font-bold text-white transition-colors hover:bg-ember-dark"
+                onClick={handleNewOrder}
+                className="mt-3 block min-h-11 w-full font-semibold text-charcoal/70 underline-offset-4 hover:underline"
               >
                 {c.newOrder}
               </button>
             </div>
           </div>
         ) : view === 'checkout' ? (
-          <CheckoutForm onBack={() => setView('cart')} onPlaced={handlePlaced} />
+          <CheckoutForm onBack={() => setView('cart')} onSubmit={handleSubmit} />
         ) : items.length === 0 ? (
           <div className="grid flex-1 place-items-center px-6 text-center">
             <div>
               <ShoppingBag className="mx-auto size-12 text-charcoal/30" aria-hidden="true" />
               <p className="mt-4 text-xl font-bold">{t.cartUi.empty}</p>
-              <p className="mt-1 text-charcoal/60">{t.cartUi.emptyHint}</p>
+              <p className="mt-1 text-charcoal/70">{t.cartUi.emptyHint}</p>
             </div>
           </div>
         ) : (
@@ -199,9 +199,7 @@ export default function CartDrawer() {
                           <Plus className="size-4" aria-hidden="true" />
                         </button>
                       </div>
-                      <p className="font-black text-ember">
-                        {nf.format(item.price * item.qty)} {t.currency}
-                      </p>
+                      <p className="font-black text-ember">{money(item.price * item.qty)}</p>
                     </div>
                   </div>
                 </li>
@@ -209,24 +207,46 @@ export default function CartDrawer() {
             </ul>
 
             <div className="border-t border-charcoal/10 px-5 py-4">
-              <div className="flex items-center justify-between text-xl font-black">
-                <span>{t.cartUi.total}</span>
-                <span className="text-ember">
-                  {nf.format(total)} {t.currency}
-                </span>
-              </div>
-              <p className="mt-2 text-sm text-charcoal/60">{t.cartUi.codNote}</p>
+              <dl className="space-y-1 text-start">
+                <div className="flex items-center justify-between">
+                  <dt>{c.subtotal}</dt>
+                  <dd className="font-semibold">{money(totals.subtotal)}</dd>
+                </div>
+                <div className="flex items-center justify-between">
+                  <dt>{c.delivery}</dt>
+                  <dd className="font-semibold">
+                    {totals.delivery === 0 ? c.free : money(totals.delivery)}
+                  </dd>
+                </div>
+                <div className="flex items-center justify-between pt-1 text-xl font-black">
+                  <dt>{t.cartUi.total}</dt>
+                  <dd className="text-ember">{money(totals.total)}</dd>
+                </div>
+              </dl>
+
+              {totals.delivery > 0 && totals.meetsMin && (
+                <p className="mt-2 text-sm text-charcoal/70">
+                  {c.freeHint(money(totals.remainingForFree))}
+                </p>
+              )}
+              {!totals.meetsMin && (
+                <p role="status" className="mt-2 text-sm font-semibold text-brick">
+                  {c.minOrder(money(restaurant.minOrder))}
+                </p>
+              )}
+
               <button
                 type="button"
                 onClick={() => setView('checkout')}
-                className="mt-3 min-h-14 w-full rounded-full bg-ember text-lg font-bold text-white transition-colors hover:bg-ember-dark"
+                disabled={!totals.meetsMin}
+                className="mt-3 min-h-14 w-full rounded-full bg-ember text-lg font-bold text-white transition-colors hover:bg-ember-dark disabled:cursor-not-allowed disabled:bg-charcoal/15 disabled:text-charcoal/50 disabled:hover:bg-charcoal/15"
               >
                 {c.checkout}
               </button>
               <button
                 type="button"
                 onClick={clear}
-                className="mt-2 min-h-11 w-full text-sm font-semibold text-charcoal/60 underline-offset-4 hover:text-brick hover:underline"
+                className="mt-2 min-h-11 w-full text-sm font-semibold text-charcoal/70 underline-offset-4 hover:text-brick hover:underline"
               >
                 {t.cartUi.clear}
               </button>
