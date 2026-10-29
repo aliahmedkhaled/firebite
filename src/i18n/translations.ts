@@ -28,6 +28,12 @@ const en = {
     categories: {
     title: 'Explore the menu',
   },
+    featured: {
+    title: 'Customer favorites',
+    bestseller: 'Best seller',
+    addToOrder: 'Add to order',
+    imageLabel: 'Dish photo',
+  },
 }
 
 export type Dict = typeof en
@@ -45,6 +51,12 @@ const ar: Dict = {
   },
     categories: {
     title: 'استكشف المنيو',
+  },
+    featured: {
+    title: 'المفضّل عند عملائنا',
+    bestseller: 'الأكثر طلبًا',
+    addToOrder: 'أضف للطلب',
+    imageLabel: 'صورة الطبق',
   },
   hero: {
     eyebrow: 'برجر · فرايد تشيكن · كومبو',
