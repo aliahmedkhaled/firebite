@@ -10,12 +10,15 @@ const specs = {
   hero: { w: 1, h: 1, widths: [480, 960] },
   offer: { w: 4, h: 3, widths: [480, 800] },
   dish: { w: 1, h: 1, widths: [320, 640] },
+  menu: { w: 1, h: 1, widths: [320, 640] },
   story: { w: 4, h: 3, widths: [640, 1000] },
 }
 
 const expected = [
   'hero', 'offer-1', 'offer-2', 'offer-3',
-  'dish-1', 'dish-2', 'dish-3', 'dish-4', 'story',
+  'dish-1', 'dish-2', 'dish-3', 'dish-4',
+  'menu-1', 'menu-2', 'menu-3', 'menu-4', 'menu-5', 'menu-6', 'menu-7', 'menu-8',
+  'story',
 ]
 
 await mkdir(OUT, { recursive: true })

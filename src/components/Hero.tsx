@@ -28,7 +28,7 @@ export default function Hero() {
 
           <div className="mt-9 flex flex-wrap gap-3">
             <a
-              href="#featured"
+              href="#menu"
               className="inline-flex min-h-14 items-center gap-2 rounded-full bg-ember ps-8 pe-6 text-lg font-bold text-white shadow-lg shadow-ember/30 transition-all hover:-translate-y-0.5 hover:bg-ember-dark"
             >
               {t.hero.primaryCta}

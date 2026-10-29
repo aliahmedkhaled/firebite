@@ -1,9 +1,8 @@
 import CartDrawer from './components/CartDrawer'
-import Categories from './components/Categories'
-import Featured from './components/Featured'
 import Footer from './components/Footer'
 import Header from './components/Header'
 import Hero from './components/Hero'
+import Menu from './components/Menu'
 import Offers from './components/Offers'
 import Reveal from './components/Reveal'
 import Story from './components/Story'
@@ -18,10 +17,7 @@ export default function App() {
           <Offers />
         </Reveal>
         <Reveal>
-          <Categories />
-        </Reveal>
-        <Reveal>
-          <Featured />
+          <Menu />
         </Reveal>
         <Reveal>
           <Story />
