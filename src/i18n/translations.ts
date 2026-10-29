@@ -18,6 +18,7 @@ const en = {
     close: 'Close',
     viewOrder: 'View order',
     codNote: 'Cash on delivery. Prototype only, no real orders yet.',
+    added: 'Added to your order',
   },
   nav: {
     offers: 'Offers',
@@ -26,11 +27,14 @@ const en = {
   },
   hero: {
     eyebrow: 'Burgers · Fried chicken · Combos',
-    title: 'Bite into the fire.',
+    titleA: 'Bite into',
+    titleB: 'the fire.',
     subtitle: 'Hot off the grill, bold on flavor. Pick your favorite and we handle the rest.',
     primaryCta: 'Order now',
     secondaryCta: 'See today’s offers',
     imageLabel: 'A stacked smash burger with melted cheese and fire sauce',
+    chipA: 'Made to order',
+    chipB: 'Open till 2 AM',
   },
   offers: {
     title: 'Today’s offers',
@@ -89,6 +93,7 @@ const ar: Dict = {
     close: 'إغلاق',
     viewOrder: 'شوف الطلب',
     codNote: 'الدفع عند الاستلام. نموذج تجريبي، مفيش طلبات حقيقية لسه.',
+    added: 'اتضاف للطلب',
   },
   nav: {
     offers: 'العروض',
@@ -97,11 +102,14 @@ const ar: Dict = {
   },
   hero: {
     eyebrow: 'برجر · فرايد تشيكن · كومبو',
-    title: 'أول عضة تولّع.',
+    titleA: 'أول عضة',
+    titleB: 'تولّع.',
     subtitle: 'طازة من على النار وطعمها جريء. اختار المفضل عندك وسيب الباقي علينا.',
     primaryCta: 'اطلب الآن',
     secondaryCta: 'شوف عروض النهارده',
     imageLabel: 'برجر سماش عالي بجبنة ذايبة وصوص النار',
+    chipA: 'بيتعمل عند الطلب',
+    chipB: 'مفتوح لحد 2 صباحًا',
   },
   offers: {
     title: 'عروض النهارده',

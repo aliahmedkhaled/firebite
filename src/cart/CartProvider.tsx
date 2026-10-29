@@ -1,4 +1,4 @@
-﻿import { useMemo, useReducer, useState, type ReactNode } from 'react'
+import { useMemo, useReducer, useState, type ReactNode } from 'react'
 import { CartContext, type CartContextValue, type CartItem, type CartProduct } from './CartContext'
 
 type Action =

@@ -1,12 +1,10 @@
-import { Plus } from 'lucide-react'
-import { useCart } from '../cart/useCart'
 import { dishes } from '../data/dishes'
 import { useLang } from '../i18n/useLang'
+import AddButton from './AddButton'
 import Picture from './Picture'
 
 export default function Featured() {
   const { lang, t } = useLang()
-  const { add } = useCart()
   const nf = new Intl.NumberFormat(lang === 'ar' ? 'ar-EG-u-nu-latn' : 'en-US', {
     maximumFractionDigits: 0,
   })
@@ -18,7 +16,10 @@ export default function Featured() {
 
       <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {dishes.map((d, i) => (
-          <li key={d.id} className="relative flex flex-col rounded-3xl bg-sand p-3">
+          <li
+            key={d.id}
+            className="relative flex flex-col rounded-3xl bg-sand p-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-charcoal/10"
+          >
             <Picture
               name={`dish-${i + 1}`}
               widths={[320, 640]}
@@ -42,21 +43,15 @@ export default function Featured() {
                 <p className="text-xl font-black text-ember">
                   {nf.format(d.price)} <span className="text-sm font-bold">{t.currency}</span>
                 </p>
-                <button
-                  type="button"
-                  onClick={() =>
-                    add({
-                      id: d.id,
-                      name: d.name,
-                      price: d.price,
-                      image: `/images/dish-${i + 1}-320.webp`,
-                    })
-                  }
-                  aria-label={`${t.featured.addToOrder}: ${d.name[lang]}`}
-                  className="grid size-12 place-items-center rounded-full bg-ember text-white transition-colors hover:bg-ember-dark"
-                >
-                  <Plus className="size-6" aria-hidden="true" />
-                </button>
+                <AddButton
+                  label={`${t.featured.addToOrder}: ${d.name[lang]}`}
+                  product={{
+                    id: d.id,
+                    name: d.name,
+                    price: d.price,
+                    image: `/images/dish-${i + 1}-320.webp`,
+                  }}
+                />
               </div>
             </div>
           </li>

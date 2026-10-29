@@ -5,6 +5,7 @@ import Footer from './components/Footer'
 import Header from './components/Header'
 import Hero from './components/Hero'
 import Offers from './components/Offers'
+import Reveal from './components/Reveal'
 import Story from './components/Story'
 
 export default function App() {
@@ -13,10 +14,18 @@ export default function App() {
       <Header />
       <main>
         <Hero />
-        <Offers />
-        <Categories />
-        <Featured />
-        <Story />
+        <Reveal>
+          <Offers />
+        </Reveal>
+        <Reveal>
+          <Categories />
+        </Reveal>
+        <Reveal>
+          <Featured />
+        </Reveal>
+        <Reveal>
+          <Story />
+        </Reveal>
       </main>
       <Footer />
       <CartDrawer />

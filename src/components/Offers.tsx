@@ -1,12 +1,10 @@
-import { Plus } from 'lucide-react'
-import { useCart } from '../cart/useCart'
 import { offers } from '../data/offers'
 import { useLang } from '../i18n/useLang'
+import AddButton from './AddButton'
 import Picture from './Picture'
 
 export default function Offers() {
   const { lang, t } = useLang()
-  const { add } = useCart()
   const nf = new Intl.NumberFormat(lang === 'ar' ? 'ar-EG-u-nu-latn' : 'en-US', {
     maximumFractionDigits: 0,
   })
@@ -20,7 +18,10 @@ export default function Offers() {
         {offers.map((o, i) => {
           const discount = Math.round((1 - o.price / o.oldPrice) * 100)
           return (
-            <li key={o.id} className="relative overflow-hidden rounded-3xl bg-sand p-4">
+            <li
+              key={o.id}
+              className="relative overflow-hidden rounded-3xl bg-sand p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-charcoal/10"
+            >
               <Picture
                 name={`offer-${i + 1}`}
                 widths={[480, 800]}
@@ -48,21 +49,15 @@ export default function Offers() {
                     </p>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={() =>
-                      add({
-                        id: o.id,
-                        name: o.title,
-                        price: o.price,
-                        image: `/images/offer-${i + 1}-480.webp`,
-                      })
-                    }
-                    aria-label={`${t.offers.addToOrder}: ${o.title[lang]}`}
-                    className="grid size-12 place-items-center rounded-full bg-ember text-white transition-colors hover:bg-ember-dark"
-                  >
-                    <Plus className="size-6" aria-hidden="true" />
-                  </button>
+                  <AddButton
+                    label={`${t.offers.addToOrder}: ${o.title[lang]}`}
+                    product={{
+                      id: o.id,
+                      name: o.title,
+                      price: o.price,
+                      image: `/images/offer-${i + 1}-480.webp`,
+                    }}
+                  />
                 </div>
               </div>
             </li>
