@@ -1,13 +1,12 @@
-import { useMemo, useReducer, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useReducer, useState, type ReactNode } from 'react'
 import { CartContext, type CartContextValue, type CartItem, type CartProduct } from './CartContext'
+import { MAX_QTY, loadCart, saveCart } from './storage'
 
 type Action =
   | { type: 'add'; product: CartProduct }
   | { type: 'setQty'; id: string; qty: number }
   | { type: 'remove'; id: string }
   | { type: 'clear' }
-
-const MAX_QTY = 20
 
 function reducer(items: CartItem[], action: Action): CartItem[] {
   switch (action.type) {
@@ -34,8 +33,12 @@ function reducer(items: CartItem[], action: Action): CartItem[] {
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, dispatch] = useReducer(reducer, [])
+  const [items, dispatch] = useReducer(reducer, undefined, loadCart)
   const [isOpen, setIsOpen] = useState(false)
+
+  useEffect(() => {
+    saveCart(items)
+  }, [items])
 
   const value = useMemo<CartContextValue>(
     () => ({
