@@ -1,8 +1,10 @@
 import Categories from './components/Categories'
 import Featured from './components/Featured'
+import Footer from './components/Footer'
 import Header from './components/Header'
 import Hero from './components/Hero'
 import Offers from './components/Offers'
+import Story from './components/Story'
 
 export default function App() {
   return (
@@ -13,13 +15,9 @@ export default function App() {
         <Offers />
         <Categories />
         <Featured />
-        <section
-          id="story"
-          className="grid min-h-[60vh] scroll-mt-28 place-items-center border-t border-charcoal/10 text-2xl font-bold"
-        >
-          #story
-        </section>
+        <Story />
       </main>
+      <Footer />
     </div>
   )
 }
