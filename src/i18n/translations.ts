@@ -25,6 +25,9 @@ const en = {
     addToOrder: 'Add to order',
     imageLabel: 'Offer photo',
   },
+    categories: {
+    title: 'Explore the menu',
+  },
 }
 
 export type Dict = typeof en
@@ -39,6 +42,9 @@ const ar: Dict = {
     offers: 'العروض',
     menu: 'المنيو',
     story: 'حكايتنا',
+  },
+    categories: {
+    title: 'استكشف المنيو',
   },
   hero: {
     eyebrow: 'برجر · فرايد تشيكن · كومبو',
