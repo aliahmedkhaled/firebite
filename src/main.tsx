@@ -4,12 +4,15 @@ import '@fontsource-variable/cairo'
 import '@fontsource-variable/bricolage-grotesque'
 import './index.css'
 import App from './App.tsx'
+import { CartProvider } from './cart/CartProvider.tsx'
 import { LangProvider } from './i18n/LangProvider.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <LangProvider>
-      <App />
+      <CartProvider>
+        <App />
+      </CartProvider>
     </LangProvider>
   </StrictMode>,
 )

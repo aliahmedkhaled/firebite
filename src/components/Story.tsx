@@ -1,5 +1,5 @@
 import { useLang } from '../i18n/useLang'
-import ImagePlaceholder from './ImagePlaceholder'
+import Picture from './Picture'
 
 export default function Story() {
   const { t } = useLang()
@@ -25,10 +25,14 @@ export default function Story() {
           </ul>
         </div>
 
-        <ImagePlaceholder
-          label={t.story.imageLabel}
-          className="aspect-[4/3] w-full border-cream/20 bg-cream/10 [&_*]:text-cream/60"
-        />
+        <Picture
+  name="story"
+  widths={[640, 1000]}
+  aspect="landscape"
+  sizes="(min-width: 768px) 520px, 100vw"
+  alt={t.story.imageLabel}
+  className="aspect-[4/3] w-full rounded-3xl"
+/>
       </div>
     </section>
   )

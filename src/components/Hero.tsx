@@ -1,7 +1,6 @@
 import { ArrowRight } from 'lucide-react'
 import { useLang } from '../i18n/useLang'
-import ImagePlaceholder from './ImagePlaceholder'
-
+import Picture from './Picture'
 export default function Hero() {
   const { t } = useLang()
 
@@ -37,12 +36,15 @@ export default function Hero() {
 
       {/* الصورة: فوق على الموبايل، وجنب النص على الديسكتوب */}
       <div className="relative order-first overflow-hidden rounded-3xl md:order-last">
-        <ImagePlaceholder label={t.hero.imageLabel} className="aspect-[4/3] w-full md:aspect-square" />
-        {/* Bite Notch: دايرة بلون الخلفية في ركن الصورة، وبتنقلب مع الاتجاه */}
-        <div
-          aria-hidden="true"
-          className="absolute -end-8 -top-8 size-24 rounded-full bg-cream"
-        />
+        <Picture
+  name="hero"
+  widths={[480, 960]}
+  aspect="square"
+  sizes="(min-width: 768px) 560px, 100vw"
+  alt={t.hero.imageLabel}
+  priority
+  className="aspect-[4/3] w-full md:aspect-square"
+/>
       </div>
     </section>
   )

@@ -1,3 +1,4 @@
+import CartDrawer from './components/CartDrawer'
 import Categories from './components/Categories'
 import Featured from './components/Featured'
 import Footer from './components/Footer'
@@ -18,6 +19,7 @@ export default function App() {
         <Story />
       </main>
       <Footer />
+      <CartDrawer />
     </div>
   )
 }

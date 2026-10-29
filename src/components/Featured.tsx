@@ -1,10 +1,12 @@
 import { Plus } from 'lucide-react'
+import { useCart } from '../cart/useCart'
 import { dishes } from '../data/dishes'
 import { useLang } from '../i18n/useLang'
-import ImagePlaceholder from './ImagePlaceholder'
+import Picture from './Picture'
 
 export default function Featured() {
   const { lang, t } = useLang()
+  const { add } = useCart()
   const nf = new Intl.NumberFormat(lang === 'ar' ? 'ar-EG-u-nu-latn' : 'en-US', {
     maximumFractionDigits: 0,
   })
@@ -15,9 +17,16 @@ export default function Featured() {
       <div className="mt-3 h-1 w-14 rounded-full bg-ember" aria-hidden="true" />
 
       <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {dishes.map((d) => (
+        {dishes.map((d, i) => (
           <li key={d.id} className="relative flex flex-col rounded-3xl bg-sand p-3">
-            <ImagePlaceholder label={t.featured.imageLabel} className="aspect-square w-full bg-cream" />
+            <Picture
+              name={`dish-${i + 1}`}
+              widths={[320, 640]}
+              aspect="square"
+              sizes="(min-width: 1024px) 270px, (min-width: 640px) 45vw, 100vw"
+              alt={d.name[lang]}
+              className="aspect-square w-full rounded-2xl"
+            />
 
             {d.bestseller && (
               <span className="absolute start-5 top-5 rounded-full bg-charcoal px-3 py-1 text-xs font-bold text-white">
@@ -35,6 +44,14 @@ export default function Featured() {
                 </p>
                 <button
                   type="button"
+                  onClick={() =>
+                    add({
+                      id: d.id,
+                      name: d.name,
+                      price: d.price,
+                      image: `/images/dish-${i + 1}-320.webp`,
+                    })
+                  }
                   aria-label={`${t.featured.addToOrder}: ${d.name[lang]}`}
                   className="grid size-12 place-items-center rounded-full bg-ember text-white transition-colors hover:bg-ember-dark"
                 >
