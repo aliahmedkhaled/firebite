@@ -1,1 +1,28 @@
 @import "tailwindcss";
+
+@theme {
+  --color-cream: #FBF6EE;
+  --color-sand: #F1E7D6;
+  --color-charcoal: #1E1A17;
+  --color-ember: #F25C1F;
+  --color-ember-dark: #D94A12;
+  --color-brick: #B3261E;
+
+  --font-sans: "Cairo Variable", system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque Variable", "Cairo Variable", sans-serif;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-cream);
+    color: var(--color-charcoal);
+    font-family: var(--font-sans);
+  }
+  body {
+    min-height: 100dvh;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-ember);
+    outline-offset: 3px;
+  }
+}
